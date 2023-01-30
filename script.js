@@ -44,18 +44,41 @@ function playRound(playerSelection, computerSelection){
     
 }
 
-function game(){
-    let scoreComputer=0;
-    let scorePlayer = 0;
-    for(let i=0;i<5;++i){
-        let playerSelection=prompt("Enter choice!");
-        let result = playRound(playerSelection, getComputerChoice());
-        console.log(result);
-        if(result.indexOf("Computer")!=-1){
-            ++scoreComputer;
-        }else if(result.indexOf("Player")!=-1){
-            ++scorePlayer;
-        }
+let playerScore=0;
+let computerScore=0;
+const playerScoreDisplay = document.querySelector(".player-score");
+const computerScoreDisplay = document.querySelector(".computer-score");
+const resultDisplayP  = document.querySelector(".result-display-text");
+const resultDisplayH = document.querySelector("h1[class='result-display-text']");
+
+function play(e){
+    resultDisplayH.textContent = "";
+    let playerSelection = this.getAttribute("val");
+    let computerSelection = getComputerChoice();
+    let result = playRound(playerSelection, computerSelection);
+    resultDisplayP.textContent = "In this round ... "+ result;
+    if(result.includes("Computer")){
+        ++computerScore;
+    }else if(result.includes("Player")){
+        ++playerScore;
     }
-    console.log("Players Score = "+scorePlayer+" Computer score = "+scoreComputer);
+    playerScoreDisplay.textContent = playerScore;
+    computerScoreDisplay.textContent = computerScore;
+    if(playerScore == 5 || computerScore == 5){
+        if(playerScore == 5){
+            resultDisplayH.textContent = "Player wins the game";
+        }else{
+            resultDisplayH.textContent = "Computer wins the game";
+        }
+        playerScore = 0;
+        computerScore = 0;
+    }
 }
+
+const buttons = document.querySelectorAll("button");
+buttons.forEach(btn => {
+    btn.addEventListener('click', play);
+});
+
+
+
