@@ -1,84 +1,85 @@
-function getComputerChoice(){
-    let num=1+Math.floor(Math.random()*100);
-    if(num<33.33){
-        return "rock";
-    }else if(num<66.67){
-        return "paper";
+
+/*functions
+
+getHumanChoice() Tested OK
+getComputerChoice() Tested OK
+playRound() Tested OK
+chooseWinner() Tested OK
+playGame() Tested OK
+terminateGame() Not Made
+*/
+
+function chooseWinner(computerChoice,humanChoice){
+    if(computerChoice == humanChoice){
+        return "Draw"
+    }else if((computerChoice == "Paper" && humanChoice == "Rock") || 
+    (computerChoice == "Rock" && humanChoice == "Scissor") ||
+    (computerChoice == "Scissor" && humanChoice == "Paper")){
+        return "Computer"
     }else{
-        return "scissors";
+        return "Human"
     }
 }
 
-function playRound(playerSelection, computerSelection){
-    playerSelection = playerSelection.toLowerCase();
-    //Player chooses rock
-    if(playerSelection=="rock" && computerSelection=="paper"){
-        return "Computer Wins! Paper beats Rock!";
+function playRound(){
+    let computerChoice = getComputerChoice()
+    let humanChoice = getHumanChoice()
+    let winner = chooseWinner(computerChoice,humanChoice)
+    return winner
+}
+
+function getComputerChoice(){
+    let computerChoiceNumber = Math.floor(1+(Math.random()*3))
+    let choice = 0
+    if(computerChoiceNumber == 1){
+        choice = "Rock"
+    }else if (computerChoiceNumber == 2){
+        choice = "Paper"
+    }else{
+        choice = "Scissor"
     }
-    else if(playerSelection=="rock" && computerSelection=="rock"){
-        return "Its a draw! Both chose Rock!";
+    return choice
+}
+
+function getHumanChoice(){
+    let promptResponse = prompt("Please enter choice 1. Rock, 2. Paper, 3. Scissors");
+    let choiceNumber = Number(promptResponse)
+    if(isNaN(choiceNumber) || (choiceNumber <1 && choiceNumber>3)){
+        alert("Error! Game terminated")
+        terminateGame()
     }
-    else if(playerSelection=="rock" && computerSelection=="scissors"){
-        return "Player wins! Rock beats Scissors!";
+    flooredChoiceNumber = Math.floor(choiceNumber)
+    let choice = 0
+    if(flooredChoiceNumber == 1){
+        choice = "Rock"
+    }else if (flooredChoiceNumber == 2){
+        choice = "Paper"
+    }else{
+        choice = "Scissor"
     }
-    //Player chooses Paper
-    else if(playerSelection=="paper" && computerSelection=="paper"){
-        return "Its a draw! Both chose Paper!";
+    return choice;
+}
+
+function playGame(){
+    let humanScore = 0, computerScore = 0
+    for(let i=0; i<3; i+=1){
+        let winner = playRound()
+        if(winner == "Computer"){
+            computerScore+=1
+        }else if(winner == "Human"){
+            humanScore +=1
+        }
     }
-    else if(playerSelection=="paper" && computerSelection=="rock"){
-        return "Player Wins! Paper beats Rock!";
-    }
-    else if(playerSelection=="paper" && computerSelection=="scissors"){
-        return "Computer wins!Scissors beats Paper!";
-    }
-    //Player Chooses Scissors
-    else if(playerSelection=="scissors" && computerSelection=="paper"){
-        return "Player wins!Scissors beats Paper!";
-    }
-    else if(playerSelection=="scissors" && computerSelection=="rock"){
-        return "Computer Wins! Rock beats Scissors!";
-    }
-    else if(playerSelection=="scissors" && computerSelection=="scissors"){
-        return "Its a draw! Both chose Scissors!";
+    console.log("HumanScore: "+humanScore)
+    console.log("computerScore: "+computerScore)
+    if(humanScore>computerScore){
+        console.log("Winner: Human")
+    }else if(humanScore<computerScore){
+        console.log("Winner: Computer")
+    }else{
+        console.log("Draw")
     }
     
 }
 
-let playerScore=0;
-let computerScore=0;
-const playerScoreDisplay = document.querySelector(".player-score");
-const computerScoreDisplay = document.querySelector(".computer-score");
-const resultDisplayP  = document.querySelector(".result-display-text");
-const resultDisplayH = document.querySelector("h1[class='result-display-text']");
-
-function play(e){
-    resultDisplayH.textContent = "";
-    let playerSelection = this.getAttribute("val");
-    let computerSelection = getComputerChoice();
-    let result = playRound(playerSelection, computerSelection);
-    resultDisplayP.textContent = "In this round ... "+ result;
-    if(result.includes("Computer")){
-        ++computerScore;
-    }else if(result.includes("Player")){
-        ++playerScore;
-    }
-    playerScoreDisplay.textContent = playerScore;
-    computerScoreDisplay.textContent = computerScore;
-    if(playerScore == 5 || computerScore == 5){
-        if(playerScore == 5){
-            resultDisplayH.textContent = "Player wins the game";
-        }else{
-            resultDisplayH.textContent = "Computer wins the game";
-        }
-        playerScore = 0;
-        computerScore = 0;
-    }
-}
-
-const buttons = document.querySelectorAll("button");
-buttons.forEach(btn => {
-    btn.addEventListener('click', play);
-});
-
-
-
+playGame()
